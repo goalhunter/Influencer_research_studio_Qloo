@@ -867,39 +867,6 @@ def main():
     init_session_state()
     apis = initialize_apis()
     
-    # Clean API Status with Theme Toggle
-    st.markdown(f"""
-    <div class="api-status">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-            <h4 style="margin: 0;">🔗 API Status</h4>
-            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" style="position: relative; width: 30px; height: 30px; font-size: 14px;">
-                🌙
-            </div>
-        </div>
-        <div class="status-item">
-            <span>Qloo</span>
-            <span style="display: flex; align-items: center; gap: 0.5rem;">
-                <div class="status-dot {'status-connected' if 'qloo' in apis else 'status-disconnected'}"></div>
-                {'Connected' if 'qloo' in apis else 'Offline'}
-            </span>
-        </div>
-        <div class="status-item">
-            <span>Perplexity</span>
-            <span style="display: flex; align-items: center; gap: 0.5rem;">
-                <div class="status-dot {'status-connected' if 'perplexity' in apis else 'status-disconnected'}"></div>
-                {'Connected' if 'perplexity' in apis else 'Offline'}
-            </span>
-        </div>
-        <div class="status-item">
-            <span>OpenAI</span>
-            <span style="display: flex; align-items: center; gap: 0.5rem;">
-                <div class="status-dot {'status-connected' if 'openai' in apis else 'status-disconnected'}"></div>
-                {'Connected' if 'openai' in apis else 'Offline'}
-            </span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Hero Section
     st.markdown("""
     <div class="hero">

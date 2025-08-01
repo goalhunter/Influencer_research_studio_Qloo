@@ -150,3 +150,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+qloo/
+.qloo/

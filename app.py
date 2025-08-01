@@ -1126,10 +1126,10 @@ def main():
             
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # Brand Collaboration Opportunities
+            # Brand Collaboration Opportunities - NATIVE STREAMLIT VERSION
             st.markdown('<div class="insight-box">', unsafe_allow_html=True)
             st.markdown("#### 🤝 Brand Collaboration Finder")
-            
+
             if st.button("🔍 Find Brand Partners", key="brand_btn"):
                 if 'perplexity' in apis:
                     with st.spinner("Discovering brand collaboration opportunities..."):
@@ -1156,12 +1156,12 @@ def main():
                                 st.markdown(f"**🎯 Brand Collaboration Opportunities for {content_category.title()} Content:**")
                                 
                                 for i, brand in enumerate(brands, 1):
-                                    # Clean all brand data to remove any HTML/formatting
+                                    # Clean all brand data
                                     import html
                                     import re
                                     
-                                    def clean_brand_data(text):
-                                        """Clean any HTML or formatting from brand data"""
+                                    def clean_text(text):
+                                        """Clean any HTML or formatting from text"""
                                         if not text or not isinstance(text, str):
                                             return str(text) if text else ""
                                         
@@ -1177,64 +1177,62 @@ def main():
                                         return clean_text
                                     
                                     # Clean all brand fields
-                                    brand_name = clean_brand_data(brand.get('name', 'Unknown Brand'))
-                                    fit_reason = clean_brand_data(brand.get('fit_reason', 'Great alignment with your content niche and audience'))
-                                    value_range = clean_brand_data(brand.get('value_range', 'Varies'))
-                                    approach = clean_brand_data(brand.get('approach', 'Direct outreach'))
+                                    brand_name = clean_text(brand.get('name', 'Unknown Brand'))
+                                    fit_reason = clean_text(brand.get('fit_reason', 'Great alignment with your content niche and audience'))
+                                    value_range = clean_text(brand.get('value_range', 'Varies'))
+                                    approach = clean_text(brand.get('approach', 'Direct outreach'))
                                     
                                     # Clean collaboration types
                                     collab_types = brand.get('collaboration_types', ['Sponsored Content'])
-                                    clean_collab_types = [clean_brand_data(ct) for ct in collab_types[:3]]
+                                    clean_collab_types = [clean_text(ct) for ct in collab_types[:3] if ct]
                                     
-                                    # Create brand card using clean data
-                                    st.markdown(f"""
-                                    <div style="
-                                        background: linear-gradient(135deg, #f0f9ff, #ffffff);
-                                        padding: 1.5rem;
-                                        border-radius: 15px;
-                                        margin: 1rem 0;
-                                        border-left: 4px solid #3b82f6;
-                                        border: 1px solid #e0f2fe;
-                                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                    ">
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                            <strong style="color: #1e40af; font-size: 1.2rem;">🏢 {brand_name}</strong>
-                                            <span style="background: #3b82f6; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">
-                                                Partnership Ready
-                                            </span>
-                                        </div>
+                                    # Create brand card using Streamlit native components
+                                    with st.container():
+                                        # Card styling
+                                        st.markdown("""
+                                        <div style="
+                                            background: linear-gradient(135deg, #f0f9ff, #ffffff);
+                                            padding: 1.5rem;
+                                            border-radius: 15px;
+                                            margin: 1rem 0;
+                                            border-left: 4px solid #3b82f6;
+                                            border: 1px solid #e0f2fe;
+                                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                        ">
+                                        """, unsafe_allow_html=True)
                                         
-                                        <div style="margin: 0.8rem 0;">
-                                            <strong style="color: #374151;">Why They're a Good Fit:</strong>
-                                            <p style="color: #6b7280; margin: 0.3rem 0; font-size: 0.9rem; line-height: 1.4;">
-                                                {fit_reason}
-                                            </p>
-                                        </div>
+                                        # Header row
+                                        header_col1, header_col2 = st.columns([3, 1])
+                                        with header_col1:
+                                            st.markdown(f"### 🏢 {brand_name}")
+                                        with header_col2:
+                                            st.success("Partnership Ready")
                                         
-                                        <div style="margin: 0.8rem 0;">
-                                            <strong style="color: #374151;">Collaboration Types:</strong>
-                                            <div style="margin-top: 0.5rem;">
-                                                {' '.join([f'<span style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.6rem; margin: 0.1rem; border-radius: 12px; font-size: 0.8rem; display: inline-block;">{collab_type}</span>' for collab_type in clean_collab_types])}
-                                            </div>
-                                        </div>
+                                        # Why they're a good fit
+                                        st.markdown("**Why They're a Good Fit:**")
+                                        st.markdown(f"*{fit_reason}*")
                                         
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
-                                            <div>
-                                                <strong style="color: #374151; font-size: 0.9rem;">💰 Value Range:</strong>
-                                                <span style="color: #16a34a; font-weight: 600; margin-left: 0.5rem;">{value_range}</span>
-                                            </div>
-                                            <div style="text-align: right;">
-                                                <strong style="color: #374151; font-size: 0.9rem;">📧 Approach:</strong>
-                                                <br>
-                                                <span style="color: #6b7280; font-size: 0.8rem;">{approach}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    """, unsafe_allow_html=True)
+                                        # Collaboration types
+                                        st.markdown("**Collaboration Types:**")
+                                        cols = st.columns(len(clean_collab_types) if clean_collab_types else 1)
+                                        for idx, collab_type in enumerate(clean_collab_types):
+                                            with cols[idx % len(cols)]:
+                                                st.info(collab_type)
+                                        
+                                        # Bottom row with value and approach
+                                        bottom_col1, bottom_col2 = st.columns(2)
+                                        with bottom_col1:
+                                            st.markdown(f"**💰 Value Range:** `{value_range}`")
+                                        with bottom_col2:
+                                            st.markdown(f"**📧 Approach:** {approach}")
+                                        
+                                        st.markdown("</div>", unsafe_allow_html=True)
+                                        
+                                        # Add some spacing
+                                        st.markdown("<br>", unsafe_allow_html=True)
                                 
-                                # Show music-specific brand partnerships if we have trending sounds
+                                # Show music-specific brand partnerships if available
                                 try:
-                                    # Get a sample sound ID for music brand partnerships
                                     sample_sound_id = f"{selected_platform[0:2]}_sample_001"
                                     music_brands = music_api.get_music_brand_partnerships(
                                         apis['perplexity'], 
@@ -1243,41 +1241,92 @@ def main():
                                     )
                                     
                                     if music_brands:
+                                        st.markdown("---")
                                         st.markdown("**🎵 Music-Related Brand Opportunities:**")
+                                        
                                         for brand in music_brands[:2]:
-                                            st.markdown(f"🎼 **{brand.get('name', 'Music Brand')}** - {brand.get('fit_reason', 'Music industry partnership opportunity')[:50]}...")
+                                            with st.container():
+                                                col1, col2 = st.columns([1, 3])
+                                                with col1:
+                                                    st.markdown("🎼")
+                                                with col2:
+                                                    clean_name = clean_text(str(brand.get('name', 'Music Brand')))
+                                                    clean_reason = clean_text(str(brand.get('fit_reason', 'Music industry partnership opportunity')))
+                                                    st.markdown(f"**{clean_name}** - {clean_reason[:80]}...")
                                 except:
                                     pass
+                                    
                             else:
                                 st.info("No brand collaborations found for the current criteria.")
                                 
                         except Exception as e:
                             st.error(f"Error finding brand collaborations: {str(e)}")
                             
-                            # Show sample brands as fallback
+                            # Show sample brands as fallback using native components
                             st.markdown("**🤝 Sample Brand Collaboration Opportunities:**")
+                            
                             sample_brands = [
-                                {"name": "Fashion Forward Co.", "value_range": "$500-$2,000", "fit": "Trendy fashion brand seeking content creators"},
-                                {"name": "TechGear Pro", "value_range": "$1,000-$5,000", "fit": "Technology brand looking for product reviewers"},
-                                {"name": "Lifestyle Essentials", "value_range": "$200-$1,500", "fit": "Lifestyle brand targeting young demographics"}
+                                {"name": "Fashion Forward Co.", "value_range": "$500-$2,000", "fit": "Trendy fashion brand seeking content creators", "types": ["Sponsored Posts", "Product Reviews"]},
+                                {"name": "TechGear Pro", "value_range": "$1,000-$5,000", "fit": "Technology brand looking for product reviewers", "types": ["Unboxing Videos", "Tech Reviews"]},
+                                {"name": "Lifestyle Essentials", "value_range": "$200-$1,500", "fit": "Lifestyle brand targeting young demographics", "types": ["Product Placement", "Story Features"]}
                             ]
                             
                             for brand in sample_brands:
-                                st.markdown(f"� **{brand['name']}** - {brand['fit']} (*{brand['value_range']}*)")
+                                with st.container():
+                                    # Create a nice card for each sample brand
+                                    col1, col2 = st.columns([3, 1])
+                                    
+                                    with col1:
+                                        st.markdown(f"### 🏢 {brand['name']}")
+                                        st.markdown(f"*{brand['fit']}*")
+                                        
+                                        # Show collaboration types as badges
+                                        type_cols = st.columns(len(brand['types']))
+                                        for idx, collab_type in enumerate(brand['types']):
+                                            with type_cols[idx]:
+                                                st.info(collab_type)
+                                    
+                                    with col2:
+                                        st.success("Available")
+                                        st.markdown(f"**💰 {brand['value_range']}**")
+                                    
+                                    st.markdown("---")
                 else:
                     st.warning("Perplexity API required for brand collaboration discovery")
                     
-                    # Show basic guidance without API
-                    st.markdown("""
-                    **💡 Brand Collaboration Tips:**
+                    # Show enhanced guidance without API
+                    st.markdown("**💡 Brand Collaboration Strategy Guide:**")
                     
-                    1. **Research your niche** - Look for brands that align with your content
-                    2. **Check engagement rates** - Brands prefer creators with engaged audiences
-                    3. **Create a media kit** - Include your stats, demographics, and past work
-                    4. **Start small** - Build relationships with smaller brands first
-                    5. **Be authentic** - Only partner with brands you genuinely support
-                    """)
-            
+                    # Create tabs for different aspects
+                    tab1, tab2, tab3 = st.tabs(["🎯 Finding Brands", "📧 Outreach", "💰 Pricing"])
+                    
+                    with tab1:
+                        st.markdown("""
+                        **Research Your Niche:**
+                        - Look for brands that align with your content style
+                        - Check competitor partnerships for inspiration
+                        - Use tools like Social Blade to find brand partnerships
+                        - Follow brand hashtags to see their current campaigns
+                        """)
+                    
+                    with tab2:
+                        st.markdown("""
+                        **Effective Outreach:**
+                        - Create a professional media kit with your stats
+                        - Personalize every email - mention specific products
+                        - Include your best content examples
+                        - Be clear about your rates and deliverables
+                        """)
+                    
+                    with tab3:
+                        st.markdown("""
+                        **Pricing Guidelines:**
+                        - **Micro (1K-10K):** $10-100 per 1K followers
+                        - **Mid-tier (10K-100K):** $100-500 per post
+                        - **Macro (100K+):** $1000+ per campaign
+                        - Factor in engagement rate and content quality
+                        """)
+
             st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":

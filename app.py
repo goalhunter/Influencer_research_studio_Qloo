@@ -903,8 +903,8 @@ def main():
     # Hero Section
     st.markdown("""
     <div class="hero">
-        <h1>🚀 AI Influencer Research Studio</h1>
-        <p>Powered by Advanced AI • Discover trends, analyze markets, predict viral content</p>
+        <h1>🚀 Influencer Research Studio</h1>
+        <p>Powered by Qloo • Now you never run out of content</p>
     </div>
     """, unsafe_allow_html=True)
     

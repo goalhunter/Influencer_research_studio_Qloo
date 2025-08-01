@@ -58,32 +58,45 @@ def init_session_state():
         if key not in st.session_state:
             st.session_state[key] = default_value
 
-# Enhanced CSS with Dark Mode, Animations, and Professional Styling
+# Enhanced CSS with Perfect Light/Dark Mode Support
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
     --primary-color: #667eea;
     --secondary-color: #764ba2;
     --accent-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
     --text-primary: #1a202c;
     --text-secondary: #718096;
+    --text-muted: #a0aec0;
     --border-color: #e2e8f0;
+    --border-light: #f7fafc;
+    
     --shadow-light: 0 4px 12px rgba(0,0,0,0.08);
     --shadow-medium: 0 10px 25px rgba(0,0,0,0.15);
     --shadow-heavy: 0 20px 40px rgba(0,0,0,0.2);
+    
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
 }
 
 [data-theme="dark"] {
     --bg-primary: #1a202c;
     --bg-secondary: #2d3748;
+    --bg-tertiary: #4a5568;
     --text-primary: #f7fafc;
-    --text-secondary: #a0aec0;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
     --border-color: #4a5568;
+    --border-light: #2d3748;
     --shadow-light: 0 4px 12px rgba(0,0,0,0.3);
     --shadow-medium: 0 10px 25px rgba(0,0,0,0.4);
     --shadow-heavy: 0 20px 40px rgba(0,0,0,0.6);
@@ -99,11 +112,338 @@ body {
     color: var(--text-primary);
 }
 
-/* Theme Toggle */
+/* Hero Section - Works in both modes */
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-heavy);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+}
+
+.hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+
+/* API Status - Adapts to theme */
+.api-status {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--bg-primary);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-medium);
+    z-index: 1000;
+    border: 1px solid var(--border-color);
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+.api-status:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-heavy);
+}
+
+.api-status h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: blink 2s infinite;
+}
+
+.status-connected { background: var(--accent-color); }
+.status-disconnected { background: var(--danger-color); }
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.4; }
+}
+
+/* Chat Messages - Theme aware */
+.chat-msg {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.chat-msg:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.msg-ai {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+    border-left: 4px solid var(--primary-color);
+}
+
+.msg-user {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border-left: 4px solid var(--accent-color);
+}
+
+/* Insight Boxes - Beautiful in both modes */
+.insight-box {
+    background: var(--bg-primary);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-light);
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.insight-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--primary-color);
+}
+
+.insight-box h4 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Metrics - Responsive to theme */
+.metric {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    margin: 0.5rem 0;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-light);
+}
+
+.metric:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--primary-color);
+}
+
+.metric h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0.5rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.metric p {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+/* Trend Tags - Multi-colored and theme aware */
+.trend-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    margin: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-light);
+    cursor: pointer;
+}
+
+.trend-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.trend-tag:nth-child(2n) {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+.trend-tag:nth-child(3n) {
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+}
+
+/* Brand Cards - Professional in both themes */
+.collab-card {
+    background: var(--bg-primary);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin: 1rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+.collab-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.collab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.collab-badge {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.collab-types {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.collab-type {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Enhanced Buttons - Theme responsive */
+.stButton > button {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: var(--radius) !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: var(--shadow-light) !important;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-medium) !important;
+}
+
+/* Input Fields - Beautiful in both modes */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea {
+    border-radius: var(--radius) !important;
+    border: 2px solid var(--border-color) !important;
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+.stTextInput > div > div > input::placeholder,
+.stTextArea > div > div > textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Loading States - Theme aware */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Theme Toggle Button */
 .theme-toggle {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 1.5rem;
+    left: 1.5rem;
     z-index: 1001;
     background: var(--bg-primary);
     border: 2px solid var(--border-color);
@@ -116,377 +456,41 @@ body {
     cursor: pointer;
     box-shadow: var(--shadow-light);
     transition: all 0.3s ease;
+    color: var(--text-primary);
 }
 
 .theme-toggle:hover {
-    transform: scale(1.1) rotate(180deg);
+    transform: scale(1.1);
     box-shadow: var(--shadow-medium);
 }
 
-/* Enhanced Hero Section */
-.hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    color: white;
-    padding: 3rem 2rem;
-    border-radius: 25px;
-    margin-bottom: 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-heavy);
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: rotate(45deg);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-.hero h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 4rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, #fff, #f0f8ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(255,255,255,0.5);
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-    from { text-shadow: 0 0 20px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.3); }
-    to { text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4); }
-}
-
-.hero p {
-    font-size: 1.4rem;
-    opacity: 0.95;
-    font-weight: 400;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-/* Enhanced Chat Messages */
-.chat-msg {
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.chat-msg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-    pointer-events: none;
-}
-
-.msg-ai {
-    background: linear-gradient(135deg, var(--bg-primary), rgba(102, 126, 234, 0.05));
-    border-left: 4px solid var(--primary-color);
-    transform: translateX(0);
-    animation: slideInLeft 0.5s ease-out;
-}
-
-.msg-user {
-    background: linear-gradient(135deg, var(--bg-primary), rgba(16, 185, 129, 0.05));
-    border-left: 4px solid var(--accent-color);
-    transform: translateX(0);
-    animation: slideInRight 0.5s ease-out;
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideInRight {
-    from { transform: translateX(100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.chat-msg:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: var(--shadow-medium);
-}
-
-/* Enhanced Insight Boxes */
-.insight-box {
-    background: var(--bg-primary);
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: var(--shadow-light);
-    margin: 1.5rem 0;
-    border: 1px solid var(--border-color);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.insight-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
-
-.insight-box:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-heavy);
-    border-color: var(--primary-color);
-}
-
-.insight-box h4 {
+/* Ensure proper color inheritance */
+.stMarkdown, .stMarkdown p, .stMarkdown div {
     color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
-/* Enhanced Metrics */
-.metric {
-    text-align: center;
-    padding: 2rem 1rem;
-    background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-    border-radius: 20px;
-    margin: 0.5rem 0;
+.stMarkdown strong {
+    color: var(--text-primary);
+}
+
+/* Tabs styling */
+.stTabs [data-baseweb="tab-list"] {
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    padding: 0.25rem;
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
 }
 
-.metric::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transition: left 0.5s;
+.stTabs [data-baseweb="tab"] {
+    background: transparent !important;
+    border-radius: var(--radius) !important;
+    color: var(--text-secondary) !important;
 }
 
-.metric:hover::before {
-    left: 100%;
-}
-
-.metric:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: var(--shadow-medium);
-    border-color: var(--primary-color);
-}
-
-.metric h3 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 0;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.metric p {
-    color: var(--text-secondary);
-    font-weight: 500;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Enhanced API Status */
-.api-status {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--bg-primary);
-    padding: 1.5rem;
-    border-radius: 15px;
-    box-shadow: var(--shadow-medium);
-    z-index: 1000;
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.api-status:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow-heavy);
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0.3rem 0;
-    font-weight: 500;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    animation: blink 2s infinite;
-}
-
-.status-dot.connected { background: var(--accent-color); }
-.status-dot.disconnected { background: #ef4444; }
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.3; }
-}
-
-/* Enhanced Trend Tags */
-.trend-tag {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    padding: 0.7rem 1.2rem;
-    border-radius: 25px;
-    margin: 0.4rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
-}
-
-.trend-tag::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.3s;
-}
-
-.trend-tag:hover::before {
-    left: 100%;
-}
-
-.trend-tag:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-    border-color: rgba(255,255,255,0.3);
-}
-
-/* Loading Animation */
-.loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid var(--border-color);
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Smooth Transitions */
-.stApp {
-    transition: all 0.3s ease;
-}
-
-/* Button Enhancements */
-.stButton > button {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 15px !important;
-    padding: 0.75rem 2rem !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: var(--shadow-light) !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-.stButton > button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.3s;
-}
-
-.stButton > button:hover::before {
-    left: 100%;
-}
-
-.stButton > button:hover {
-    transform: translateY(-2px) scale(1.02) !important;
-    box-shadow: var(--shadow-medium) !important;
-}
-
-/* Input Field Enhancements */
-.stTextInput > div > div > input,
-.stTextArea > div > div > textarea {
-    border-radius: 15px !important;
-    border: 2px solid var(--border-color) !important;
+.stTabs [aria-selected="true"] {
     background: var(--bg-primary) !important;
     color: var(--text-primary) !important;
-    padding: 1rem !important;
-    transition: all 0.3s ease !important;
-}
-
-.stTextInput > div > div > input:focus,
-.stTextArea > div > div > textarea:focus {
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
-    transform: scale(1.02) !important;
+    box-shadow: var(--shadow-light) !important;
 }
 
 /* Hide Streamlit elements */
@@ -495,86 +499,96 @@ footer {visibility: hidden;}
 header {visibility: hidden;}
 .stDeployButton {display: none;}
 
+/* Auto dark mode detection */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a202c;
+        --bg-secondary: #2d3748;
+        --bg-tertiary: #4a5568;
+        --text-primary: #f7fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #4a5568;
+        --border-light: #2d3748;
+        --shadow-light: 0 4px 12px rgba(0,0,0,0.3);
+        --shadow-medium: 0 10px 25px rgba(0,0,0,0.4);
+        --shadow-heavy: 0 20px 40px rgba(0,0,0,0.6);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.5rem;
+    .hero h1 { font-size: 2.5rem; }
+    .hero p { font-size: 1.1rem; }
+    .api-status { 
+        position: relative; 
+        top: auto; 
+        right: auto; 
+        margin: 1rem 0; 
+        width: 100%;
     }
-    
-    .hero p {
-        font-size: 1.1rem;
+    .theme-toggle {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 1rem 0;
     }
-    
-    .insight-box {
-        padding: 1.5rem;
-    }
-    
-    .metric {
-        padding: 1.5rem 1rem;
-    }
-}
-
-/* Scroll Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-/* Print Styles */
-@media print {
-    .api-status, .theme-toggle {
-        display: none !important;
-    }
+    .insight-box { padding: 1.5rem; }
+    .metric { padding: 1.5rem 1rem; }
 }
 </style>
 
 <script>
-// Theme Toggle Functionality
-function toggleTheme() {
-    const body = document.body;
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+// Enhanced Theme Management
+function initializeTheme() {
+    // Check for saved theme preference or default to system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    document.body.setAttribute('data-theme', theme);
+    updateThemeToggle(theme);
 }
 
-// Apply saved theme on load
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggle(newTheme);
+}
+
+function updateThemeToggle(theme) {
+    const toggles = document.querySelectorAll('.theme-toggle');
+    toggles.forEach(toggle => {
+        toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+        toggle.title = `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`;
+    });
+}
+
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-});
-
-// Add intersection observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in-up');
+    initializeTheme();
+    
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+            const theme = e.matches ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', theme);
+            updateThemeToggle(theme);
         }
     });
-}, observerOptions);
-
-// Observe elements when they're added to the DOM
-setTimeout(() => {
-    document.querySelectorAll('.insight-box, .metric, .chat-msg').forEach(el => {
-        observer.observe(el);
-    });
-}, 1000);
+    
+    // Update toggle icon after a short delay to ensure elements are loaded
+    setTimeout(() => {
+        const currentTheme = document.body.getAttribute('data-theme') || 'light';
+        updateThemeToggle(currentTheme);
+    }, 100);
+});
 </script>
+</style>
 """, unsafe_allow_html=True)
 
 def initialize_apis():
@@ -853,13 +867,36 @@ def main():
     init_session_state()
     apis = initialize_apis()
     
-    # API Status
+    # Clean API Status with Theme Toggle
     st.markdown(f"""
     <div class="api-status">
-        <strong>API Status</strong><br>
-        🟢 Qloo: {'Connected' if 'qloo' in apis else 'Offline'}<br>
-        🟢 Perplexity: {'Connected' if 'perplexity' in apis else 'Offline'}<br>
-        🟢 OpenAI: {'Connected' if 'openai' in apis else 'Offline'}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h4 style="margin: 0;">🔗 API Status</h4>
+            <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" style="position: relative; width: 30px; height: 30px; font-size: 14px;">
+                🌙
+            </div>
+        </div>
+        <div class="status-item">
+            <span>Qloo</span>
+            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="status-dot {'status-connected' if 'qloo' in apis else 'status-disconnected'}"></div>
+                {'Connected' if 'qloo' in apis else 'Offline'}
+            </span>
+        </div>
+        <div class="status-item">
+            <span>Perplexity</span>
+            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="status-dot {'status-connected' if 'perplexity' in apis else 'status-disconnected'}"></div>
+                {'Connected' if 'perplexity' in apis else 'Offline'}
+            </span>
+        </div>
+        <div class="status-item">
+            <span>OpenAI</span>
+            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="status-dot {'status-connected' if 'openai' in apis else 'status-disconnected'}"></div>
+                {'Connected' if 'openai' in apis else 'Offline'}
+            </span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -867,7 +904,7 @@ def main():
     st.markdown("""
     <div class="hero">
         <h1>🚀 AI Influencer Research Studio</h1>
-        <p>Powered by Qloo | Discover trends, analyze markets, predict viral content</p>
+        <p>Powered by Advanced AI • Discover trends, analyze markets, predict viral content</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -877,7 +914,11 @@ def main():
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            st.markdown("### 💬 AI Strategy Consultant")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>💬 AI Strategy Consultant</h4>
+            </div>
+            """, unsafe_allow_html=True)
             
             # Display conversation
             for i, msg in enumerate(st.session_state.messages):
@@ -922,18 +963,61 @@ def main():
                 st.rerun()
         
         with col2:
-            # Getting started message during onboarding
-            st.markdown("### 📊 Your Insights Dashboard")
+            # Enhanced getting started section using Streamlit components
             st.markdown("""
             <div class="insight-box">
-                <h4>💬 Getting Started</h4>
-                <p>Chat with the AI on the left to unlock personalized insights!</p>
-                <ul>
-                    <li>🌍 Global market analysis</li>
-                    <li>🚀 Viral content prediction</li>
-                    <li>📊 Growth strategies</li>
-                    <li>📈 Trending topics</li>
-                </ul>
+                <h4>📊 Your Insights Dashboard</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; text-align: center; font-style: italic;">Chat with the AI to unlock personalized insights!</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Feature preview cards using Streamlit columns
+            col1_preview, col2_preview = st.columns(2)
+            
+            with col1_preview:
+                with st.container():
+                    st.markdown("""
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🌍</div>
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.1rem;">Global Analysis</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Worldwide market insights</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with st.container():
+                    st.markdown("""
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--border-color);">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.1rem;">Growth Strategy</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Smart recommendations</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col2_preview:
+                with st.container():
+                    st.markdown("""
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚀</div>
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.1rem;">Viral Prediction</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">AI content scoring</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with st.container():
+                    st.markdown("""
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--border-color);">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📈</div>
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.1rem;">Trending Topics</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Real-time trends</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            # Call to action section
+            st.markdown("""
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✨</div>
+                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Ready to get started?</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">Answer the AI's questions to unlock these powerful insights</div>
             </div>
             """, unsafe_allow_html=True)
     
@@ -962,20 +1046,158 @@ def main():
         
         with col_left:
             # World Map
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🌍 Global Content Engagement Map")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🌍 Global Content Engagement Map</h4>
+            """, unsafe_allow_html=True)
             
             if st.session_state.world_data and 'country_data' in st.session_state.world_data:
                 fig = create_world_map(st.session_state.world_data['country_data'])
                 st.plotly_chart(fig, use_container_width=True)
             else:
-                st.info("Loading global engagement data...")
+                st.markdown("""
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading global engagement data...</p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Content Ideas Generator - NEW SECTION
+            st.markdown("""
+            <div class="insight-box">
+                <h4>💡 Content Ideas Generator</h4>
+            """, unsafe_allow_html=True)
+            
+            if st.button("✨ Generate Content Ideas", key="content_ideas_btn"):
+                if 'openai' in apis:
+                    with st.spinner("🎯 Generating content ideas..."):
+                        try:
+                            # Get user profile from messages
+                            user_niche = "general content"
+                            user_audience = "general audience"
+                            user_platform = "social media"
+                            
+                            if st.session_state.messages:
+                                user_niche = st.session_state.messages[0].replace("You: ", "") if len(st.session_state.messages) > 0 else "general content"
+                                user_audience = st.session_state.messages[2].replace("You: ", "") if len(st.session_state.messages) > 2 else "general audience"
+                                user_platform = st.session_state.messages[4].replace("You: ", "") if len(st.session_state.messages) > 4 else "social media"
+                            
+                            # Generate content ideas using OpenAI
+                            profile_data = {
+                                'niche': user_niche,
+                                'audience': user_audience,
+                                'platform': user_platform
+                            }
+                            
+                            content_ideas = apis['openai'].generate_content_ideas(profile_data)
+                            
+                            # Display the ideas in a nice format
+                            st.markdown("**🎯 Trending Content Ideas for Your Niche:**")
+                            
+                            if isinstance(content_ideas, list):
+                                for i, idea in enumerate(content_ideas[:5], 1):
+                                    st.markdown(f"""
+                                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius); margin: 0.75rem 0; border-left: 3px solid var(--primary-color); transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">💡 Idea #{i}</div>
+                                        <div style="color: var(--text-secondary); font-size: 0.95rem;">{idea}</div>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                            else:
+                                st.markdown(content_ideas)
+                                
+                        except Exception as e:
+                            # Fallback content ideas based on user niche
+                            user_niche = st.session_state.messages[0].replace("You: ", "").lower() if st.session_state.messages else "general"
+                            
+                            # Generate niche-specific ideas
+                            if "fitness" in user_niche or "health" in user_niche:
+                                ideas = [
+                                    "5 Morning Exercises You Can Do in 10 Minutes",
+                                    "Healthy Meal Prep Ideas for Busy Professionals", 
+                                    "Common Workout Mistakes and How to Fix Them",
+                                    "30-Day Fitness Challenge for Beginners",
+                                    "Quick Stretches to Do at Your Desk"
+                                ]
+                            elif "tech" in user_niche or "programming" in user_niche:
+                                ideas = [
+                                    "5 Programming Languages to Learn in 2025",
+                                    "AI Tools That Will Boost Your Productivity",
+                                    "Beginner's Guide to Web Development",
+                                    "Tech Career Tips for New Graduates",
+                                    "Coding Challenges to Improve Your Skills"
+                                ]
+                            elif "business" in user_niche or "entrepreneur" in user_niche:
+                                ideas = [
+                                    "5 Side Business Ideas You Can Start Today",
+                                    "Essential Tools for Remote Team Management",
+                                    "How to Create a Winning Business Plan",
+                                    "Social Media Marketing on a Budget",
+                                    "Productivity Hacks for Entrepreneurs"
+                                ]
+                            elif "lifestyle" in user_niche or "fashion" in user_niche:
+                                ideas = [
+                                    "5 Wardrobe Essentials for Every Season",
+                                    "Home Decor Ideas on a Budget",
+                                    "Self-Care Routine for Busy People",
+                                    "Sustainable Living Tips for Beginners",
+                                    "Travel Hacks for Budget-Conscious Explorers"
+                                ]
+                            elif "food" in user_niche or "cooking" in user_niche:
+                                ideas = [
+                                    "5 Quick Dinner Recipes Under 30 Minutes",
+                                    "Healthy Snacks for Weight Loss",
+                                    "Beginner's Guide to Meal Planning",
+                                    "International Dishes You Can Make at Home",
+                                    "Kitchen Gadgets That Actually Save Time"
+                                ]
+                            else:
+                                ideas = [
+                                    "5 Trending Topics in Your Industry",
+                                    "Behind-the-Scenes of Your Daily Routine",
+                                    "Common Myths in Your Field (Debunked)",
+                                    "Quick Tips for Beginners in Your Niche",
+                                    "Tools and Resources You Actually Use"
+                                ]
+                            
+                            st.markdown("**🎯 Trending Content Ideas for Your Niche:**")
+                            for i, idea in enumerate(ideas, 1):
+                                st.markdown(f"""
+                                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius); margin: 0.75rem 0; border-left: 3px solid var(--primary-color); transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">💡 Idea #{i}</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.95rem;">{idea}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
+                else:
+                    # Show sample ideas when no API is available
+                    st.markdown("**💡 Sample Content Ideas:**")
+                    
+                    sample_ideas = [
+                        "5 Morning Habits That Changed My Life",
+                        "Behind the Scenes: My Content Creation Process",
+                        "Common Mistakes in [Your Niche] and How to Avoid Them",
+                        "Quick Tips for Beginners in [Your Field]",
+                        "Tools I Actually Use Daily (Honest Review)"
+                    ]
+                    
+                    for i, idea in enumerate(sample_ideas, 1):
+                        st.markdown(f"""
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius); margin: 0.75rem 0; border-left: 3px solid var(--primary-color); transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                            <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">💡 Idea #{i}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.95rem;">{idea}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    st.info("💡 Connect OpenAI API for personalized content ideas based on your specific niche!")
             
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Trending Topics
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🔥 Viral Trends by Region")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🔥 Viral Trends by Region</h4>
+            """, unsafe_allow_html=True)
             
             if st.session_state.world_data and 'global_trends' in st.session_state.world_data:
                 trends_html = ""
@@ -994,27 +1216,41 @@ def main():
                     st.markdown("**🎯 Key Insights:**")
                     st.markdown(st.session_state.world_data['insights'])
             else:
-                st.info("Loading trending topics...")
+                st.markdown("""
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading trending topics...</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Competition Analysis
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🏆 Competition Analysis")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🏆 Competition Analysis</h4>
+            """, unsafe_allow_html=True)
             
             if st.session_state.world_data and 'competitors' in st.session_state.world_data and st.session_state.world_data['competitors']:
                 st.markdown("**Top Competitors in Your Niche:**")
                 for i, competitor in enumerate(st.session_state.world_data['competitors'][:3], 1):
                     st.markdown(f"**{i}.** {competitor}")
             else:
-                st.info("Loading competition data...")
+                st.markdown("""
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading competition data...</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
         
         with col_right:
             # Viral Content Predictor
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🚀 Viral Content Predictor")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🚀 Viral Content Predictor</h4>
+            """, unsafe_allow_html=True)
             
             content_idea = st.text_area("Describe your content idea:", placeholder="E.g., A political satire video about current events in Gujarati with English subtitles...", height=100)
             
@@ -1030,20 +1266,25 @@ def main():
                             
                             prediction = apis['openai'].predict_viral_potential(content_idea, profile_data, [])
                             score = prediction.get('viral_score', 65)
-                            color = "#10b981" if score >= 70 else "#f59e0b" if score >= 50 else "#ef4444"
+                            color = "#06d6a0" if score >= 70 else "#f59e0b" if score >= 50 else "#ef4444"
                             
-                            st.markdown(f'<div style="text-align: center;"><h1 style="color: {color}; font-size: 3rem; margin: 1rem 0;">{score}/100</h1></div>', unsafe_allow_html=True)
+                            st.markdown(f"""
+                            <div style="text-align: center; background: var(--bg-primary); padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-light); margin: 1rem 0; border: 1px solid var(--border-color);">
+                                <h1 style="color: {color}; font-size: 3rem; margin: 1rem 0; font-family: 'Space Grotesk', sans-serif;">{score}/100</h1>
+                                <p style="color: var(--text-secondary);">Viral Potential Score</p>
+                            </div>
+                            """, unsafe_allow_html=True)
                             
                             col_x, col_y = st.columns(2)
                             with col_x:
-                                st.markdown("**Strengths:**")
+                                st.markdown("**✅ Strengths:**")
                                 for reason in prediction.get('reasons', ['Engaging topic'])[:3]:
-                                    st.markdown(f"✅ {reason}")
+                                    st.markdown(f"• {reason}")
                             
                             with col_y:
-                                st.markdown("**Improvements:**")
+                                st.markdown("**💡 Improvements:**")
                                 for improvement in prediction.get('improvements', ['Add trending hashtags'])[:3]:
-                                    st.markdown(f"💡 {improvement}")
+                                    st.markdown(f"• {improvement}")
                         except Exception as e:
                             st.error(f"Prediction error: {str(e)}")
                 elif not content_idea:
@@ -1054,8 +1295,10 @@ def main():
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Growth Strategy
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 📈 AI Growth Strategy")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>📈 AI Growth Strategy</h4>
+            """, unsafe_allow_html=True)
             
             if st.button("🚀 Generate Strategy", key="strategy_btn"):
                 if 'openai' in apis:
@@ -1092,8 +1335,10 @@ def main():
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Trending Audio/Music Integration
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🎵 Trending Audio Discovery")
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🎵 Trending Audio Discovery</h4>
+            """, unsafe_allow_html=True)
             
             # Initialize Music Trends API
             music_api = MusicTrendsAPI()
@@ -1101,9 +1346,7 @@ def main():
             # Set default platform (no dropdown)
             selected_platform = "tiktok"
             
-            
             # Search functionality
-            st.markdown("---")
             search_keyword = st.text_input("🔎 Search for specific sounds:", placeholder="Enter keyword (e.g., 'dance', 'motivation')", key="sound_search")
             
             if search_keyword:
@@ -1126,9 +1369,12 @@ def main():
             
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # Brand Collaboration Opportunities - NATIVE STREAMLIT VERSION
-            st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-            st.markdown("#### 🤝 Brand Collaboration Finder")
+            # Brand Collaboration Opportunities
+            # Brand Collaboration Opportunities - FIXED VERSION
+            st.markdown("""
+            <div class="insight-box">
+                <h4>🤝 Brand Collaboration Finder</h4>
+            """, unsafe_allow_html=True)
 
             if st.button("🔍 Find Brand Partners", key="brand_btn"):
                 if 'perplexity' in apis:
@@ -1156,113 +1402,91 @@ def main():
                                 st.markdown(f"**🎯 Brand Collaboration Opportunities for {content_category.title()} Content:**")
                                 
                                 for i, brand in enumerate(brands, 1):
-                                    # Clean all brand data
-                                    import html
-                                    import re
-                                    
-                                    def clean_text(text):
-                                        """Clean any HTML or formatting from text"""
+                                    # Enhanced text cleaning function
+                                    def clean_brand_text(text):
+                                        """Thoroughly clean brand text data"""
                                         if not text or not isinstance(text, str):
-                                            return str(text) if text else ""
+                                            return "Not specified"
                                         
-                                        # Remove HTML tags
-                                        clean_text = re.sub(r'<[^>]*>', '', text)
-                                        # Decode HTML entities
-                                        clean_text = html.unescape(clean_text)
+                                        import re
+                                        import html
+                                        
+                                        # Remove all HTML tags completely
+                                        text = re.sub(r'<[^>]*?>', '', text)
+                                        
                                         # Remove markdown formatting
-                                        clean_text = re.sub(r'\*+([^*]+)\*+', r'\1', clean_text)
-                                        clean_text = re.sub(r'_{1,3}([^_]+)_{1,3}', r'\1', clean_text)
-                                        # Clean up whitespace
-                                        clean_text = ' '.join(clean_text.split())
-                                        return clean_text
+                                        text = re.sub(r'\*{1,3}([^*]+)\*{1,3}', r'\1', text)
+                                        text = re.sub(r'_{1,3}([^_]+)_{1,3}', r'\1', text)
+                                        text = re.sub(r'`([^`]+)`', r'\1', text)
+                                        
+                                        # Remove extra whitespace and newlines
+                                        text = re.sub(r'\s+', ' ', text)
+                                        text = text.strip()
+                                        
+                                        # Decode HTML entities
+                                        text = html.unescape(text)
+                                        
+                                        # Limit length to prevent overflow
+                                        if len(text) > 150:
+                                            text = text[:147] + "..."
+                                        
+                                        return text if text else "Not specified"
                                     
-                                    # Clean all brand fields
-                                    brand_name = clean_text(brand.get('name', 'Unknown Brand'))
-                                    fit_reason = clean_text(brand.get('fit_reason', 'Great alignment with your content niche and audience'))
-                                    value_range = clean_text(brand.get('value_range', 'Varies'))
-                                    approach = clean_text(brand.get('approach', 'Direct outreach'))
+                                    # Clean all brand data
+                                    brand_name = clean_brand_text(brand.get('name', 'Unknown Brand'))
+                                    fit_reason = clean_brand_text(brand.get('fit_reason', 'Great alignment with your content niche'))
+                                    value_range = clean_brand_text(brand.get('value_range', 'Varies'))
+                                    approach = clean_brand_text(brand.get('approach', 'Direct outreach'))
                                     
-                                    # Clean collaboration types
+                                    # Handle collaboration types safely
                                     collab_types = brand.get('collaboration_types', ['Sponsored Content'])
-                                    clean_collab_types = [clean_text(ct) for ct in collab_types[:3] if ct]
+                                    if isinstance(collab_types, str):
+                                        collab_types = [collab_types]
+                                    elif not isinstance(collab_types, list):
+                                        collab_types = ['Sponsored Content']
                                     
-                                    # Create brand card using Streamlit native components
+                                    # Clean and limit collaboration types
+                                    clean_types = []
+                                    for ct in collab_types[:3]:  # Limit to 3 types
+                                        cleaned = clean_brand_text(str(ct))
+                                        if cleaned and cleaned != "Not specified":
+                                            clean_types.append(cleaned)
+                                    
+                                    if not clean_types:
+                                        clean_types = ['Sponsored Content']
+                                    
+                                    # Create brand card using Streamlit components instead of raw HTML
                                     with st.container():
-                                        # Card styling
-                                        st.markdown("""
-                                        <div style="
-                                            background: linear-gradient(135deg, #f0f9ff, #ffffff);
-                                            padding: 1.5rem;
-                                            border-radius: 15px;
-                                            margin: 1rem 0;
-                                            border-left: 4px solid #3b82f6;
-                                            border: 1px solid #e0f2fe;
-                                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                        ">
-                                        """, unsafe_allow_html=True)
+                                        # Brand header
+                                        col_brand, col_badge = st.columns([3, 1])
+                                        with col_brand:
+                                            st.markdown(f"**🏢 {brand_name}**")
+                                        with col_badge:
+                                            st.markdown('<span style="background: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.75rem;">Partnership Ready</span>', unsafe_allow_html=True)
                                         
-                                        # Header row
-                                        header_col1, header_col2 = st.columns([3, 1])
-                                        with header_col1:
-                                            st.markdown(f"### 🏢 {brand_name}")
-                                        with header_col2:
-                                            st.success("Partnership Ready")
-                                        
-                                        # Why they're a good fit
-                                        st.markdown("**Why They're a Good Fit:**")
+                                        # Fit reason
                                         st.markdown(f"*{fit_reason}*")
                                         
                                         # Collaboration types
-                                        st.markdown("**Collaboration Types:**")
-                                        cols = st.columns(len(clean_collab_types) if clean_collab_types else 1)
-                                        for idx, collab_type in enumerate(clean_collab_types):
-                                            with cols[idx % len(cols)]:
-                                                st.info(collab_type)
+                                        types_html = " ".join([f'<span style="background: var(--bg-secondary); color: var(--text-secondary); padding: 0.4rem 0.8rem; border-radius: var(--radius); font-size: 0.8rem; margin-right: 0.5rem; display: inline-block;">{ct}</span>' for ct in clean_types])
+                                        st.markdown(types_html, unsafe_allow_html=True)
                                         
-                                        # Bottom row with value and approach
-                                        bottom_col1, bottom_col2 = st.columns(2)
-                                        with bottom_col1:
-                                            st.markdown(f"**💰 Value Range:** `{value_range}`")
-                                        with bottom_col2:
-                                            st.markdown(f"**📧 Approach:** {approach}")
+                                        # Value and approach
+                                        col_value, col_approach = st.columns(2)
+                                        with col_value:
+                                            st.markdown(f"**💰 {value_range}**")
+                                        with col_approach:
+                                            st.markdown(f"📧 {approach}")
                                         
-                                        st.markdown("</div>", unsafe_allow_html=True)
-                                        
-                                        # Add some spacing
-                                        st.markdown("<br>", unsafe_allow_html=True)
-                                
-                                # Show music-specific brand partnerships if available
-                                try:
-                                    sample_sound_id = f"{selected_platform[0:2]}_sample_001"
-                                    music_brands = music_api.get_music_brand_partnerships(
-                                        apis['perplexity'], 
-                                        sample_sound_id, 
-                                        platform=selected_platform
-                                    )
-                                    
-                                    if music_brands:
-                                        st.markdown("---")
-                                        st.markdown("**🎵 Music-Related Brand Opportunities:**")
-                                        
-                                        for brand in music_brands[:2]:
-                                            with st.container():
-                                                col1, col2 = st.columns([1, 3])
-                                                with col1:
-                                                    st.markdown("🎼")
-                                                with col2:
-                                                    clean_name = clean_text(str(brand.get('name', 'Music Brand')))
-                                                    clean_reason = clean_text(str(brand.get('fit_reason', 'Music industry partnership opportunity')))
-                                                    st.markdown(f"**{clean_name}** - {clean_reason[:80]}...")
-                                except:
-                                    pass
-                                    
+                                        st.markdown("---")  # Separator
+                            
                             else:
                                 st.info("No brand collaborations found for the current criteria.")
                                 
                         except Exception as e:
                             st.error(f"Error finding brand collaborations: {str(e)}")
                             
-                            # Show sample brands as fallback using native components
+                            # Show sample brands as fallback
                             st.markdown("**🤝 Sample Brand Collaboration Opportunities:**")
                             
                             sample_brands = [
@@ -1273,22 +1497,22 @@ def main():
                             
                             for brand in sample_brands:
                                 with st.container():
-                                    # Create a nice card for each sample brand
-                                    col1, col2 = st.columns([3, 1])
+                                    # Brand header
+                                    col_brand, col_badge = st.columns([3, 1])
+                                    with col_brand:
+                                        st.markdown(f"**🏢 {brand['name']}**")
+                                    with col_badge:
+                                        st.markdown('<span style="background: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.75rem;">Available</span>', unsafe_allow_html=True)
                                     
-                                    with col1:
-                                        st.markdown(f"### 🏢 {brand['name']}")
-                                        st.markdown(f"*{brand['fit']}*")
-                                        
-                                        # Show collaboration types as badges
-                                        type_cols = st.columns(len(brand['types']))
-                                        for idx, collab_type in enumerate(brand['types']):
-                                            with type_cols[idx]:
-                                                st.info(collab_type)
+                                    # Fit reason
+                                    st.markdown(f"*{brand['fit']}*")
                                     
-                                    with col2:
-                                        st.success("Available")
-                                        st.markdown(f"**💰 {brand['value_range']}**")
+                                    # Types
+                                    types_html = " ".join([f'<span style="background: var(--bg-secondary); color: var(--text-secondary); padding: 0.4rem 0.8rem; border-radius: var(--radius); font-size: 0.8rem; margin-right: 0.5rem; display: inline-block;">{ct}</span>' for ct in brand['types']])
+                                    st.markdown(types_html, unsafe_allow_html=True)
+                                    
+                                    # Value
+                                    st.markdown(f"**💰 {brand['value_range']}**")
                                     
                                     st.markdown("---")
                 else:
